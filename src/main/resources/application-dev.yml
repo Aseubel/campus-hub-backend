@@ -1,0 +1,59 @@
+server:
+  port: 611
+  tomcat:
+    threads:
+      max: 200        # 设定处理客户请求的线程的最大数目，决定了服务器可以同时响应客户请求的数,默认200
+      min-spare: 50   # 初始化线程数,最小空闲线程数,默认是10
+    accept-count: 10  # 等待队列长度
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/campushub?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
+    username: root
+    password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 10MB
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 10
+        max-pool-size: 200
+        keep-alive-time: 10
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
+
+#Redis 配置
+redis:
+  key-prefix: "campushub:"
+  time-to-live: 86400000 # 1天 (毫秒)
+  sdk:
+    config:
+      host: 127.0.0.1
+      port: 6379
+      pool-size: 10
+      min-idle-size: 5
+      idle-timeout: 30000
+      connect-timeout: 5000
+      retry-attempts: 3
+      retry-interval: 1000
+      ping-interval: 60000
+      keep-alive: true
+
+# JWT配置
+jwt:
+  secret: 4ligUANwjrxTBFxYesepp/sd32D5S4Igz7FwNDmfItPgNu8aCxnrCVe5LZebisL6J3jtGLMZF+aGDnM6vjPLFA==
+  access-token-expiration: 5200000 # 120分钟 (毫秒)
+  refresh-token-expiration: 604800000 # 7天 (毫秒)
+
+# 应用配置
+app:
+  password: CampusHub123456 # 默认账户密码
+  file-path: D:\images\ # 文件上传路径
+  get-file-api: http://localhost:611/api/common/file/ # 获取文件API

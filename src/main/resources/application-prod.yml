@@ -1,0 +1,71 @@
+server:
+  port: 20611
+  tomcat:
+    threads:
+      max: 200        # 设定处理客户请求的线程的最大数目，决定了服务器可以同时响应客户请求的数,默认200
+      min-spare: 50   # 初始化线程数,最小空闲线程数,默认是10
+    accept-count: 10  # 等待队列长度
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/campushub?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
+    username: root
+    password: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2MB
+      max-request-size: 10MB
+
+# 线程池配置
+thread:
+  pool:
+    executor:
+      config:
+        core-pool-size: 10
+        max-pool-size: 200
+        keep-alive-time: 10
+        block-queue-size: 5000
+        policy: CallerRunsPolicy
+
+#Redis 配置
+redis:
+  sdk:
+    config:
+      host: redis
+      port: 6379
+      pool-size: 10
+      min-idle-size: 5
+      idle-timeout: 30000
+      connect-timeout: 5000
+      retry-attempts: 3
+      retry-interval: 1000
+      ping-interval: 60000
+      keep-alive: true
+
+# JWT配置
+jwt:
+  secret: your-secret-key # JWT密钥
+  access-token-expiration: 1800000 # 30分钟 (毫秒)
+  refresh-token-expiration: 604800000 # 7天 (毫秒)
+
+# 短信配置
+sms:
+  provider: aliyun # 可选: aliyun, tencent
+  access-key: your-access-key
+  secret-key: your-secret-key
+  sign-name: 织梦平台
+  template-code: SMS_123456789
+
+# 应用配置
+app:
+  password: CampusHub123456 # 默认账户密码
+  file-path: /data/campushub/ # 文件上传路径
+  get-file-api: http://8.134.200.160:20611/api/common/file/ # 获取文件API
+
+# 日志
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

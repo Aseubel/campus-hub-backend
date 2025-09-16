@@ -1,0 +1,73 @@
+name: Build and Deploy to ACR
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  # You can manually trigger a workflow run by clicking on the "Actions" tab in the repository, then selecting the workflow and clicking on the "Run workflow" button.
+
+# Environment variables available to all jobs and steps in this workflow.
+env:
+  REGION_ID: cn-guangzhou
+  REGISTRY: crpi-5tzwiznwaw34lfca.cn-guangzhou.personal.cr.aliyuncs.com
+  NAMESPACE: aseubel
+  IMAGE: campus-hub-backend
+  TAG: latest  # ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 设置 Java 环境
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 缓存 Maven 依赖
+      # 使用 actions/cache 来缓存 .m2 目录，key 中包含 pom.xml 的哈希值。
+      # 只有当 pom.xml 文件改变时，才会重新下载依赖，否则将使用缓存，大大加快构建速度。
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Build with Maven
+        run: mvn verify -DskipTests
+
+      # Login to ACR
+      - name: Login to ACR with the AccessKey pair
+        uses: aliyun/acr-login@v1
+        with:
+          region-id: "${{ env.REGION_ID }}"
+          access-key-id: "${{ secrets.ALIYUN_ACCESS_KEY_ID }}"
+          access-key-secret: "${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}"
+
+      # 登录阿里云 Container Registry
+      - name: login to aliyun container registry
+        run: docker login --username="${{ secrets.ALIYUN_USERNAME }}" --password="${{ secrets.ALIYUN_PASSWORD }}"  "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
+
+      # 构建镜像并推送到阿里云 Container Registry
+      - name: Build and push image to ACR
+        run: |
+          echo "Building Docker image..."
+          docker build --tag "$REGISTRY/$NAMESPACE/$IMAGE:$TAG" .
+          echo "Pushing Docker image to ACR..."
+          docker push "$REGISTRY/$NAMESPACE/$IMAGE:$TAG"
+
+      # 扫描镜像
+      - name: Scan image in ACR
+        uses: aliyun/acr-scan@v1
+        with:
+          region-id: "${{ env.REGION_ID }}"
+          access-key-id: "${{ secrets.ALIYUN_ACCESS_KEY_ID }}"
+          access-key-secret: "${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}"
+          repository: "${{ env.NAMESPACE }}/${{ env.IMAGE }}"
+          tag: "${{ env.TAG }}"

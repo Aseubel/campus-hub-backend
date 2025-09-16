@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: campushub-backend
+  config:
+    name: campushub-backend
+  profiles:
+    active: prod
