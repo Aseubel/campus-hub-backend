@@ -8,6 +8,7 @@ import com.aseubel.campushubbackend.pojo.entity.User;
 import com.aseubel.campushubbackend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Aseubel
  * @date 2025/6/27
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class AuthController {
             LoginResponse response = userService.login(request);
             return ApiResponse.success("登录成功", response);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -45,6 +48,7 @@ public class AuthController {
             LoginResponse response = userService.mobileLogin(request);
             return ApiResponse.success("登录成功", response);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -58,6 +62,7 @@ public class AuthController {
             LoginResponse response = userService.register(request);
             return ApiResponse.success("注册成功", response);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -75,6 +80,7 @@ public class AuthController {
             LoginResponse response = userService.refreshToken(refreshToken);
             return ApiResponse.success("刷新成功", response);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -90,6 +96,7 @@ public class AuthController {
             userService.logout(userId);
             return ApiResponse.success("登出成功", null);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -114,6 +121,7 @@ public class AuthController {
             String code = userService.sendSmsCode(mobile);
             return ApiResponse.success("验证码发送成功", code);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -129,6 +137,7 @@ public class AuthController {
 
             return ApiResponse.success("获取成功", currentUser);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }

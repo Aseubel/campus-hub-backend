@@ -63,9 +63,3 @@ app:
   password: CampusHub123456 # 默认账户密码
   file-path: /data/campushub/ # 文件上传路径
   get-file-api: http://8.134.200.160:20611/api/common/file/ # 获取文件API
-
-# 日志
-logging:
-  level:
-    root: info
-  config: classpath:logback-spring.xml

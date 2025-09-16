@@ -4,11 +4,14 @@ import com.aseubel.campushubbackend.common.annotation.Desensitization;
 import com.aseubel.campushubbackend.common.desensitize.DesensitizationTypeEnum;
 import com.aseubel.campushubbackend.pojo.entity.Image;
 import com.aseubel.campushubbackend.pojo.entity.User;
+import com.aseubel.campushubbackend.pojo.entity.User.RoleEnum;
+import com.aseubel.campushubbackend.pojo.entity.User.StatusEnum;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -35,8 +38,8 @@ public class UserInfoResponse {
                .username(user.getName())
                .mobile(user.getPhone())
                .avatarUrl(user.getAvatarUrl())
-               .role(user.getRole().getName())
-               .status(user.getStatus().getName())
+               .role(Optional.ofNullable(user.getRole()).map(RoleEnum::getName).orElse(RoleEnum.USER.getName()))
+               .status(Optional.ofNullable(user.getStatus()).map(StatusEnum::getName).orElse(StatusEnum.ACTIVE.getName()))
                .build();
     }
 

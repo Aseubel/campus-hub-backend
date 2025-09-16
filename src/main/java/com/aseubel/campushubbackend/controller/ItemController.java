@@ -1,24 +1,23 @@
 package com.aseubel.campushubbackend.controller;
 
 import com.aseubel.campushubbackend.common.ApiResponse;
-import com.aseubel.campushubbackend.pojo.dto.category.CategoryResponse;
 import com.aseubel.campushubbackend.pojo.dto.item.ItemRequest;
 import com.aseubel.campushubbackend.pojo.dto.item.ItemResponse;
-import com.aseubel.campushubbackend.pojo.entity.Category;
 import com.aseubel.campushubbackend.pojo.entity.Item;
 import com.aseubel.campushubbackend.service.ItemService;
 import com.aseubel.campushubbackend.service.ReviewService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * @author Aseubel
  * @date 2025/9/16 下午8:27
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/item")
 @RequiredArgsConstructor
@@ -45,6 +44,7 @@ public class ItemController {
 
             return ApiResponse.success(itemResponses);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -64,6 +64,7 @@ public class ItemController {
             itemResponse.setScore(calculateAverageScore(item.getId()));
             return ApiResponse.success(itemResponse);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -78,6 +79,7 @@ public class ItemController {
                             .toList();
             return ApiResponse.success(itemResponses);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -90,6 +92,7 @@ public class ItemController {
             }
             return ApiResponse.success(ItemResponse.fromEntity(request.toEntity()));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -104,6 +107,7 @@ public class ItemController {
             }
             return ApiResponse.success(ItemResponse.fromEntity(item));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -116,6 +120,7 @@ public class ItemController {
             }
             return ApiResponse.success("删除成功");
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }

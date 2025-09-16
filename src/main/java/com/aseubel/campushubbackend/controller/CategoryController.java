@@ -7,6 +7,7 @@ import com.aseubel.campushubbackend.pojo.entity.Category;
 import com.aseubel.campushubbackend.service.CategoryService;
 import com.aseubel.campushubbackend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author Aseubel
  * @date 2025/9/16 下午5:00
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class CategoryController {
                             .toList();
             return ApiResponse.success(categoryResponses);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -44,6 +47,7 @@ public class CategoryController {
             }
             return ApiResponse.success(CategoryResponse.fromEntity(request.toEntity()));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -58,6 +62,7 @@ public class CategoryController {
             }
             return ApiResponse.success(CategoryResponse.fromEntity(category));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -70,6 +75,7 @@ public class CategoryController {
             }
             return ApiResponse.success("删除成功！");
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }

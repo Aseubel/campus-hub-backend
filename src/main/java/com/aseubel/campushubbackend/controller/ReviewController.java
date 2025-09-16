@@ -3,12 +3,12 @@ package com.aseubel.campushubbackend.controller;
 import com.aseubel.campushubbackend.common.ApiResponse;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewRequest;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewResponse;
-import com.aseubel.campushubbackend.pojo.dto.review.ReviewResponse;
 import com.aseubel.campushubbackend.pojo.entity.Review;
 import com.aseubel.campushubbackend.service.ReviewService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.List;
  * @author Aseubel
  * @date 2025/9/16 下午10:07
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/review")
 @RequiredArgsConstructor
@@ -38,6 +39,7 @@ public class ReviewController {
 
             return ApiResponse.success(itemResponses);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -53,6 +55,7 @@ public class ReviewController {
 
             return ApiResponse.success(itemResponse);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -67,6 +70,7 @@ public class ReviewController {
                             .toList();
             return ApiResponse.success(itemResponses);
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -90,6 +94,7 @@ public class ReviewController {
             }
             return ApiResponse.success(ReviewResponse.fromEntity(request.toEntity()));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -104,6 +109,7 @@ public class ReviewController {
             }
             return ApiResponse.success(ReviewResponse.fromEntity(review));
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -116,6 +122,7 @@ public class ReviewController {
             }
             return ApiResponse.success("删除成功");
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
@@ -128,6 +135,7 @@ public class ReviewController {
             }
             return ApiResponse.success("删除成功");
         } catch (Exception e) {
+            log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
     }
