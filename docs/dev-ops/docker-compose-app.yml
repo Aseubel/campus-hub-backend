@@ -4,7 +4,7 @@ version: '3.3'
 # 你需要修改system为你自身系统的仓库名
 services:
   weave:
-    image: sha256:9953066a4ea0e346fe38c48d16c3bce061e22c28cd9a1a1ceb6808348e77bc25
+    image: crpi-5tzwiznwaw34lfca.cn-guangzhou.personal.cr.aliyuncs.com/aseubel/campus-hub-backend:latest
     container_name: campushub
     restart: on-failure
     ports:

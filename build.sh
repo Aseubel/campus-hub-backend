@@ -35,7 +35,7 @@ fi
 new(){
   docker stop weave
   docker rm weave
-  docker rmi crpi-5tzwiznwaw34lfca.cn-guangzhou.personal.cr.aliyuncs.com/aseubel/weave:latest
+  docker rmi crpi-5tzwiznwaw34lfca.cn-guangzhou.personal.cr.aliyuncs.com/aseubel/campus-hub-backend:latest
   $COMPOSE_COMMAND -f docker-compose-app.yml up
 }
 
