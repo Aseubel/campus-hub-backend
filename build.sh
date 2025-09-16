@@ -33,8 +33,8 @@ else
 fi
 
 new(){
-  docker stop weave
-  docker rm weave
+  docker stop campushub
+  docker rm campushub
   docker rmi crpi-5tzwiznwaw34lfca.cn-guangzhou.personal.cr.aliyuncs.com/aseubel/campus-hub-backend:latest
   $COMPOSE_COMMAND -f docker-compose-app.yml up
 }
@@ -51,12 +51,12 @@ services(){
 
 # 关闭服务模块
 stop(){
-  docker stop weave
+  docker stop campushub
 }
 
 # 删除服务模块
 rm(){
-  docker rm weave
+  docker rm campushub
 }
 
 # 删除所有未使用的镜像
