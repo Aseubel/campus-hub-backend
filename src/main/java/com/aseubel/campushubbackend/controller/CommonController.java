@@ -1,11 +1,9 @@
 package com.aseubel.campushubbackend.controller;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.aliyuncs.exceptions.ClientException;
 import com.aseubel.campushubbackend.common.ApiResponse;
-import com.aseubel.campushubbackend.common.annotation.constraint.RequireLogin;
 import com.aseubel.campushubbackend.config.AppConfigProperties;
 import com.aseubel.campushubbackend.pojo.dto.common.ImageResponse;
 import com.aseubel.campushubbackend.pojo.dto.common.UploadImageRequest;
@@ -13,13 +11,13 @@ import com.aseubel.campushubbackend.pojo.entity.Image;
 import com.aseubel.campushubbackend.service.CommonService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
-import org.springframework.util.StreamUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
 
 /**
  * 通用方法控制器
@@ -27,6 +25,7 @@ import java.io.InputStream;
  * @author Aseubel
  * @date 2025/7/27 下午8:28
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/common")
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class CommonController {
     /**
      * 上传图片
      *
-     * @param request 上传图片请求
+     * @param request  上传图片请求
      * @param response 响应
      * @return ApiResponse
      * @throws ClientException OSS上传异常
@@ -62,29 +61,20 @@ public class CommonController {
      * @return 图片文件流
      */
     @GetMapping(value = "/file/{imgName}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String imgName) {
-        String filePath = appConfigProperties.getFilePath();
+    public void getFile(@PathVariable String imgName, HttpServletResponse resp) {
         try {
-            File file = new File(filePath + imgName);
-            HttpStatus status = HttpStatus.OK;
-            MediaType mediaType = MediaTypeFactory.getMediaType(imgName).orElse(MediaType.IMAGE_JPEG);
-            // 判断图片是否存在
+            String filePath = appConfigProperties.getFilePath() + imgName;
+            File file = new File(filePath);
             if (!file.exists()) {
-                file = new File(filePath + "default.jpg");
-                status = HttpStatus.NOT_FOUND;
-                mediaType = MediaType.IMAGE_JPEG;
+                file = new File(appConfigProperties.getFilePath() + "default.jpg");
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
-            // 读取图片文件
-            InputStream is = FileUtil.getInputStream(file);
-            byte[] avatarBytes = StreamUtils.copyToByteArray(is);
-            // 构建响应头，设置Content-Type
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(mediaType);
-            return new ResponseEntity<>(avatarBytes, httpHeaders, status);
+            // 零拷贝
+            resp.setContentType(Files.probeContentType(file.toPath()));
+            Files.copy(file.toPath(), resp.getOutputStream());
         } catch (IOException e) {
             // 使用日志框架记录错误信息
-            System.err.println("Error reading avatar file: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Error reading image file: {}", e.getMessage());
         }
     }
 }
