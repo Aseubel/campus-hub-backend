@@ -4,7 +4,7 @@ import com.aseubel.campushubbackend.common.ApiResponse;
 import com.aseubel.campushubbackend.pojo.dto.item.ItemResponse;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewRequest;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewResponse;
-import com.aseubel.campushubbackend.pojo.dto.user.UserInfoResponse;
+import com.aseubel.campushubbackend.pojo.dto.user.UserResponse;
 import com.aseubel.campushubbackend.pojo.entity.Item;
 import com.aseubel.campushubbackend.pojo.entity.Review;
 import com.aseubel.campushubbackend.pojo.entity.User;
@@ -152,7 +152,7 @@ public class ReviewController {
 
     private ReviewResponse getExtraInfo(ReviewResponse reviewResponse) {
         User user = userService.getById(reviewResponse.getUserId());
-        reviewResponse.setUser(UserInfoResponse.of(user));
+        reviewResponse.setUser(UserResponse.of(user));
         Item item = itemService.getById(reviewResponse.getItemId());
         reviewResponse.setItem(ItemResponse.fromEntity(item));
         return reviewResponse;

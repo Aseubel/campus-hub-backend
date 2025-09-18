@@ -5,8 +5,6 @@ import com.aseubel.campushubbackend.pojo.dto.auth.LoginRequest;
 import com.aseubel.campushubbackend.pojo.dto.auth.LoginResponse;
 import com.aseubel.campushubbackend.pojo.dto.auth.MobileLoginRequest;
 import com.aseubel.campushubbackend.pojo.dto.auth.RegisterRequest;
-import com.aseubel.campushubbackend.pojo.dto.common.PageResponse;
-import com.aseubel.campushubbackend.pojo.dto.user.UserUpdateRequest;
 import com.aseubel.campushubbackend.pojo.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,11 +46,6 @@ public interface UserService extends IService<User> {
      * 验证短信验证码
      */
     boolean verifySmsCode(String mobile, String code);
-
-    /**
-     * 更新用户信息
-     */
-    void updateUserInfo(User user, UserUpdateRequest request);
 
     /**
      * 修改密码

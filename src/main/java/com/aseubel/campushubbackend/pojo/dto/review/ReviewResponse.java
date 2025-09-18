@@ -1,11 +1,8 @@
 package com.aseubel.campushubbackend.pojo.dto.review;
 
 import com.aseubel.campushubbackend.pojo.dto.item.ItemResponse;
-import com.aseubel.campushubbackend.pojo.dto.user.UserInfoResponse;
-import com.aseubel.campushubbackend.pojo.entity.Item;
+import com.aseubel.campushubbackend.pojo.dto.user.UserResponse;
 import com.aseubel.campushubbackend.pojo.entity.Review;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -31,7 +28,7 @@ public class ReviewResponse implements Serializable {
     private String id;
     private String userId;
     private String itemId;
-    private UserInfoResponse user;
+    private UserResponse user;
     private ItemResponse item;
     private Integer score;
     private String content;

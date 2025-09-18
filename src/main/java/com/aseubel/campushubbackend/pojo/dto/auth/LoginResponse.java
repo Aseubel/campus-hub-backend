@@ -1,6 +1,6 @@
 package com.aseubel.campushubbackend.pojo.dto.auth;
 
-import com.aseubel.campushubbackend.pojo.dto.user.UserInfoResponse;
+import com.aseubel.campushubbackend.pojo.dto.user.UserResponse;
 import com.aseubel.campushubbackend.pojo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +21,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class LoginResponse implements Serializable {
 
-    private UserInfoResponse user;
+    private UserResponse user;
 
     /**
      * 访问令牌
@@ -49,7 +49,7 @@ public class LoginResponse implements Serializable {
     public static LoginResponse fromUser(User user, String accessToken, String refreshToken,
                                          String accessTokenExpiration, String refreshTokenExpiration) {
         return LoginResponse.builder()
-                .user(UserInfoResponse.of(user))
+                .user(UserResponse.of(user))
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .accessTokenExpiration(accessTokenExpiration)

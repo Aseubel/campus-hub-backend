@@ -2,121 +2,53 @@ package com.aseubel.campushubbackend.pojo.dto.user;
 
 import com.aseubel.campushubbackend.common.annotation.Desensitization;
 import com.aseubel.campushubbackend.common.desensitize.DesensitizationTypeEnum;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import lombok.AllArgsConstructor;
+import com.aseubel.campushubbackend.common.exception.BusinessException;
+import com.aseubel.campushubbackend.pojo.entity.User;
+import com.aseubel.campushubbackend.pojo.entity.User.RoleEnum;
+import com.aseubel.campushubbackend.pojo.entity.User.StatusEnum;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * 用户响应DTO
+ * 用户信息响应DTO
  * 
  * @author Aseubel
  * @date 2025/6/29
  */
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserResponse {
 
-    /**
-     * 用户ID
-     */
-    private String id;
-
-    /**
-     * 用户名
-     */
-    private String username;
-
-    /**
-     * 昵称
-     */
-    private String nickname;
-
-    /**
-     * 头像URL
-     */
-    private String avatar;
-
-    /**
-     * 邮箱
-     */
-    @Desensitization(type = DesensitizationTypeEnum.EMAIL)
-    private String email;
-
-    /**
-     * 手机号
-     */
+    private String id; // 用户ID
+    private String username; // 用户名
     @Desensitization(type = DesensitizationTypeEnum.MOBILE)
-    private String phone;
+    private String phone; // 手机号（脱敏）
+    private String avatarUrl;
+    private String role;
+    private String status;
 
-    /**
-     * 个人简介
-     */
-    private String bio;
+    public static UserResponse of(User user) {
+        return UserResponse.builder()
+               .id(user.getId().toString())
+               .username(user.getName())
+               .phone(user.getPhone())
+               .avatarUrl(user.getAvatarUrl())
+               .role(Optional.ofNullable(user.getRole()).map(RoleEnum::getName).orElse(RoleEnum.USER.getName()))
+               .status(Optional.ofNullable(user.getStatus()).map(StatusEnum::getName).orElse(StatusEnum.ACTIVE.getName()))
+               .build();
+    }
 
-    /**
-     * 性别
-     */
-    private String gender;
+    public static List<UserResponse> ofList(List<User> users) {
+        return users.stream().map(UserResponse::of).toList();
+    }
 
-    /**
-     * 生日
-     */
-    private LocalDate birthday;
+    public void checkStatus() {
+        if (status.equals(StatusEnum.DISABLED.getName())) {
+            throw new BusinessException("该用户已被禁用，请联系管理员");
+        }
+    }
 
-    /**
-     * 创建时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime createdAt;
-
-    /**
-     * 更新时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime updatedAt;
-
-    /**
-     * 关注数量
-     */
-    private Long followingCount;
-
-    /**
-     * 粉丝数量
-     */
-    private Long followersCount;
-
-    /**
-     * 帖子数量
-     */
-    private Long postsCount;
-
-    /**
-     * 是否已关注该用户
-     */
-    private Boolean isFollowing;
-
-    /**
-     * 是否被该用户关注
-     */
-    private Boolean isFollowedBy;
-
-    /**
-     * 是否互相关注
-     */
-    private Boolean isMutualFollow;
 }

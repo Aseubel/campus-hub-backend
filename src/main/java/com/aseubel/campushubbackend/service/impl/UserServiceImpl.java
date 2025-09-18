@@ -10,7 +10,6 @@ import com.aseubel.campushubbackend.pojo.dto.auth.LoginRequest;
 import com.aseubel.campushubbackend.pojo.dto.auth.LoginResponse;
 import com.aseubel.campushubbackend.pojo.dto.auth.MobileLoginRequest;
 import com.aseubel.campushubbackend.pojo.dto.auth.RegisterRequest;
-import com.aseubel.campushubbackend.pojo.dto.user.UserUpdateRequest;
 import com.aseubel.campushubbackend.pojo.entity.User;
 import com.aseubel.campushubbackend.redis.IRedisService;
 import com.aseubel.campushubbackend.redis.KeyBuilder;
@@ -220,11 +219,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.like(User::getPhone, mobile);
         return userMapper.selectCount(lambdaQueryWrapper) > 0;
-    }
-
-    @Override
-    public void updateUserInfo(User user, UserUpdateRequest request) {
-
     }
 
     @Override
