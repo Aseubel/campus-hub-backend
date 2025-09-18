@@ -1,10 +1,16 @@
 package com.aseubel.campushubbackend.controller;
 
 import com.aseubel.campushubbackend.common.ApiResponse;
+import com.aseubel.campushubbackend.pojo.dto.item.ItemResponse;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewRequest;
 import com.aseubel.campushubbackend.pojo.dto.review.ReviewResponse;
+import com.aseubel.campushubbackend.pojo.dto.user.UserInfoResponse;
+import com.aseubel.campushubbackend.pojo.entity.Item;
 import com.aseubel.campushubbackend.pojo.entity.Review;
+import com.aseubel.campushubbackend.pojo.entity.User;
+import com.aseubel.campushubbackend.service.ItemService;
 import com.aseubel.campushubbackend.service.ReviewService;
+import com.aseubel.campushubbackend.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +30,8 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
+    private final UserService userService;
+    private final ItemService itemService;
 
     @GetMapping("")
     public ApiResponse<List<ReviewResponse>> getByItem(@RequestParam("itemId") Long itemId) {
@@ -35,6 +43,7 @@ public class ReviewController {
             List<ReviewResponse> itemResponses =
                     items.stream()
                             .map(ReviewResponse::fromEntity)
+                            .map(this::getExtraInfo)
                             .toList();
 
             return ApiResponse.success(itemResponses);
@@ -53,7 +62,7 @@ public class ReviewController {
             }
             ReviewResponse itemResponse = ReviewResponse.fromEntity(review);
 
-            return ApiResponse.success(itemResponse);
+            return ApiResponse.success(getExtraInfo(itemResponse));
         } catch (Exception e) {
             log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
@@ -67,6 +76,7 @@ public class ReviewController {
             List<ReviewResponse> itemResponses =
                     items.stream()
                             .map(ReviewResponse::fromEntity)
+                            .map(this::getExtraInfo)
                             .toList();
             return ApiResponse.success(itemResponses);
         } catch (Exception e) {
@@ -138,5 +148,13 @@ public class ReviewController {
             log.error("操作失败", e);
             return ApiResponse.error(e.getMessage());
         }
+    }
+
+    private ReviewResponse getExtraInfo(ReviewResponse reviewResponse) {
+        User user = userService.getById(reviewResponse.getUserId());
+        reviewResponse.setUser(UserInfoResponse.of(user));
+        Item item = itemService.getById(reviewResponse.getItemId());
+        reviewResponse.setItem(ItemResponse.fromEntity(item));
+        return reviewResponse;
     }
 }

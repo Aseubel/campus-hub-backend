@@ -1,6 +1,7 @@
 package com.aseubel.campushubbackend.pojo.dto.review;
 
 import com.aseubel.campushubbackend.pojo.dto.item.ItemResponse;
+import com.aseubel.campushubbackend.pojo.dto.user.UserInfoResponse;
 import com.aseubel.campushubbackend.pojo.entity.Item;
 import com.aseubel.campushubbackend.pojo.entity.Review;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -27,9 +28,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewResponse implements Serializable {
-    private Long id;
-    private Long userId;
-    private Long itemId;
+    private String id;
+    private String userId;
+    private String itemId;
+    private UserInfoResponse user;
+    private ItemResponse item;
     private Integer score;
     private String content;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -43,9 +46,9 @@ public class ReviewResponse implements Serializable {
 
     public static ReviewResponse fromEntity(Review review) {
         return ReviewResponse.builder()
-                .id(review.getId())
-                .userId(review.getUserId())
-                .itemId(review.getItemId())
+                .id(String.valueOf(review.getId()))
+                .userId(String.valueOf(review.getUserId()))
+                .itemId(String.valueOf(review.getItemId()))
                 .score(review.getScore())
                 .content(review.getContent())
                 .createdAt(review.getCreatedAt())
